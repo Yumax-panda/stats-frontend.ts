@@ -1,6 +1,10 @@
-import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+
+import React from 'react';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+
+import logo from './logo.svg';
+import LeaderBoard from './pages/leaderboard';
 
 function App() {
   return (
@@ -19,6 +23,11 @@ function App() {
           Learn React
         </a>
       </header>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/:guildId" element={<LeaderBoard />} />
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }
