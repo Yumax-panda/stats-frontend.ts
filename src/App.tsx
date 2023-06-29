@@ -1,33 +1,28 @@
-import './App.css';
-
 import React from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
-import logo from './logo.svg';
 import LeaderBoard from './pages/leaderboard';
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/:guildId" element={<LeaderBoard />} />
-        </Routes>
-      </BrowserRouter>
+      <body className="text-light">
+        <nav className="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark border-bottom box-shadow mb-3">
+          <div className="container">
+            <h3 id="headerTitle">交流戦 Bot Webサービス</h3>
+            <div className="navbar-nav flex-grow">
+              <ul className="navbar-nav flex-grow">
+                <li className="nav-item">
+                  <a className="nav-link text-light" href="/">Home</a>
+                </li>
+                <li className="nav-item">
+                  <a className="nav-link text-light" href="/info">お知らせ</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </nav>
+      </body>
+      <LeaderBoard />
     </div>
   );
 }
