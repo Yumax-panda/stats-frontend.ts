@@ -3,7 +3,7 @@ import '../style/leaderboard.css';
 import axios from 'axios';
 import { useState } from 'react';
 
-const URL = "http://127.0.0.1:8000";
+const URL = process.env.REACT_APP_API_URL;
 
 type GameResult = {
     idx: number;
@@ -184,7 +184,7 @@ export default function LeaderBoard() {
                                                 })()}
                                             </tr>
                                         );
-                                })};
+                                })}
                             </tbody>
                         </table>
                     </div>
