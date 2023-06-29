@@ -1,6 +1,7 @@
 import axios from 'axios';
-import { useEffect, useRef, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useState } from 'react';
+
+const URL = "http://127.0.0.1:8000";
 
 type GameResult = {
     idx: number;
@@ -11,35 +12,47 @@ type GameResult = {
     diff: number;
 }
 
+type Payload = {
+    data: GameResult[];
+}
+
 type APIQuery = {
     guildId: string | undefined;
-    name: string | null | undefined;
-    filter: string | undefined | null;
+    enemyName: string | null | undefined;
+    filter: string | undefined;
+}
+
+type NameResponse = {
+    name: string;
 }
 
 
-async function getGameResults(query: APIQuery): Promise<GameResult[]> {
-    const {guildId, name, filter} = query;
-    let url = `${process.env.REACT_API_URL}/guild/results/${guildId}`;
+async function getGameResults(query: APIQuery) : Promise<GameResult[]> {
+    const {guildId, enemyName, filter} = query;
+    let url = `${URL}/api/guild/results/${guildId}`;
     const queries = [];
 
-    if (name) {
-        queries.push(name);
+    if (enemyName) {
+        queries.push(`name=${enemyName}`);
     }
     if (filter) {
-        queries.push(filter);
+        queries.push(`filter=${filter}`);
     }
     if (queries.length > 0) {
         url += `?${queries.join('&')}`;
     }
 
-    try {
-        const response = await axios.get<GameResult[]>(url);
-        return response.data;
-    } catch (error) {
+    const results = await axios.get<Payload>(url)
+        .then((response) => {
+            return response.data.data;
+        }
+    ).catch((error) => {
         console.error(error);
         return [];
     }
+    );
+    console.log(results);
+    return results;
 }
 
 async function getTeamName(guildId: string | undefined): Promise<string | null> {
@@ -48,55 +61,69 @@ async function getTeamName(guildId: string | undefined): Promise<string | null> 
         return null;
     }
 
-    const url = `${process.env.REACT_API_URL}/guild/name/${guildId}`;
+    const url = `${URL}/api/guild/name/${guildId}`;
 
-    try {
-        const response = await axios.get<string>(url);
-        return response.data;
-    } catch (error) {
+    const name = await axios.get<NameResponse>(url)
+        .then((response) => {
+            return response.data.name;
+        }
+    ).catch((error) => {
         console.error(error);
         return null;
     }
+    );
+    return name;
 }
 
 export default function LeaderBoard() {
-    const nameRef = useRef<HTMLInputElement>(null);
-    const filterRef = useRef<HTMLSelectElement>(null);
-    const {guildId} = useParams<{guildId: string}>();
-    const [teamName, setTeamName] = useState<string | null>(null);
+    const [teamName, setTeamName] = useState<string | null | undefined>(null);
     const [gameResults, setGameResults] = useState<GameResult[]>([]);
-    const [query, setQuery] = useState<APIQuery>({guildId, name: null, filter: "all"})
+    const [query, setQuery] = useState<APIQuery>({guildId: "", enemyName: null, filter: "all"});
 
-    useEffect(() => {
-        (async () => {
-            const results = await getGameResults(query);
-            const name = await getTeamName(guildId);
-            setTeamName(name);
-            setGameResults(results);
-        })();
-}, [query, guildId]);
-
-    const changeHandler = () => {
-        const name = nameRef.current?.value;
-        const filter = filterRef.current?.value;
-        setQuery({guildId, name, filter});
+    const update = async (_query: APIQuery = query) => {
+        const results =  await getGameResults(_query);
+        const name = await getTeamName(_query.guildId);
+        setTeamName(name);
+        setGameResults(results);
     }
+
+    const handleEvent = async (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>): Promise<void> => {
+        const {id, value} = event.target;
+        const newQuery = {...query, [id]: value};
+        console.log(newQuery);
+        await update(newQuery);
+        console.log(gameResults);
+        setQuery(newQuery);
+    }
+
+
 
     return (
         <div className="container">
             <div role="main" className="pb-3">
 
-                <form className="mb-3" onChange={changeHandler}>
+                <form className="mb-3">
                     <div className="form-row form-group row">
 
                         <div className="col">
+                            <label htmlFor="guildId">サーバーID</label>
+                            <input type="text" className="form-control bg-dark text-light" id="guildId" placeholder="サーバーID" onChange={
+                                async (event) => {await handleEvent(event);}
+                            }/>
+                        </div>
+
+                        <div className="col">
                             <label htmlFor="enemyName">チーム名</label>
-                            <input type="text" className="form-control bg-dark text-light" id="enemyName" placeholder="チーム名" ref = {nameRef} />
+                            <input type="text" className="form-control bg-dark text-light" id="enemyName" placeholder="チーム名" onChange={
+                                async (event) => {await handleEvent(event);}
+                            }/>
                         </div>
 
                         <div className="col">
                             <label htmlFor="filter">フィルター</label>
-                            <select className="form-control bg-dark text-light" id="filter" ref={filterRef}>
+                            <select className="form-control bg-dark text-light" id="filter" onChange={
+                                async (event) => {await handleEvent(event);}
+                            }>
                                 <option value="all">All</option>
                                 <option value="win">Win</option>
                                 <option value="lose">Lose</option>
@@ -133,19 +160,25 @@ export default function LeaderBoard() {
                                 {
                                     gameResults.map((result) => {
                                         return (
-                                            <tr>
+                                            <tr key={result.idx}>
                                                 <td>{result.idx+1}</td>
                                                 <td>{result.enemy}</td>
                                                 <td>{result.date}</td>
                                                 <td>{result.score} - {result.enemyScore}</td>
                                                 {(() => {
                                                     if (result.diff > 0) {
-                                                        return <td className="text-win">Win (+{result.diff})</td>
+                                                        return (
+                                                            <td className="text-win">Win (+{result.diff})</td>
+                                                        );
                                                     };
                                                     if (result.diff < 0) {
-                                                        return <td className="text-lose">Lose ({result.diff})</td>
+                                                        return (
+                                                            <td className="text-lose">Lose ({result.diff})</td>
+                                                        );
                                                     }
-                                                    return <td className="text-draw">Draw</td>
+                                                    return (
+                                                        <td className="text-draw">Draw</td>
+                                                    );
                                                 })()}
                                             </tr>
                                         );
