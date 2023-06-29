@@ -1,5 +1,9 @@
 table{
     border: grey 1px solid;
+    text-align: center;
+    width: 80%;
+    max-width: 1110px;
+    margin: 0 auto;
 }
 
 table > thead > tr {
