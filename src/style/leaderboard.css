@@ -1,0 +1,27 @@
+table{
+    border: grey 1px solid;
+}
+
+table > thead > tr {
+    background-color: #0A2D61;
+}
+
+table > tbody > tr:nth-child(odd) {
+    background-color: #212121;
+}
+
+table > tbody > tr:nth-child(even) {
+    background-color: #2F2F2F;
+}
+
+.text-win {
+    color: #f08080;
+}
+
+.text-lose {
+    color: #87ceeb;
+}
+
+.text-draw {
+    color: #90ee90;
+}

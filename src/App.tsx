@@ -1,3 +1,5 @@
+import './style/common.css';
+
 import React from 'react';
 
 import LeaderBoard from './pages/leaderboard';
@@ -21,8 +23,8 @@ function App() {
             </div>
           </div>
         </nav>
+        <LeaderBoard />
       </body>
-      <LeaderBoard />
     </div>
   );
 }

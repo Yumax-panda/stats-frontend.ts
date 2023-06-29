@@ -1,0 +1,15 @@
+body {
+    background-color: #212121;
+}
+
+.text-light {
+    color: #f8f9fa!important;
+}
+
+.navbar {
+    background-color: #343A40;
+}
+
+.container {
+    text-align: center;
+}
