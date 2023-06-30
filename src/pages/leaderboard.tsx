@@ -31,37 +31,6 @@ type NameResponse = {
 }
 
 
-async function getGameResults(query: APIQuery) : Promise<Payload> {
-    const {guildId, enemyName, filter, skip} = query;
-    let url = `${URL}/api/guild/results/${guildId}`;
-    const queries = [];
-
-    if (enemyName) {
-        queries.push(`name=${enemyName}`);
-    }
-    if (filter) {
-        queries.push(`filter=${filter}`);
-    }
-    if (skip) {
-        queries.push(`skip=${skip}`);
-    }
-    if (queries.length > 0) {
-        url += `?${queries.join('&')}`;
-    }
-
-    const payload = await axios.get<Payload>(url)
-        .then((response) => {
-            return response.data;
-        }
-    ).catch((error) => {
-        console.error(error);
-        return {data: [], total: 0};
-    }
-    );
-    console.log(payload);
-    return payload;
-}
-
 async function getTeamName(guildId: string | undefined): Promise<string | null> {
 
     if (!guildId) {
@@ -113,14 +82,36 @@ export default function LeaderBoard() {
     ): Promise<void> => {
         const maxPage = Math.ceil(total / 50);
         if (page < 1 || page > maxPage) {
-            alert(`ページ番号は1から${maxPage}の間で指定してください`);
             return;
         }
     const requestQuery = {..._query, skip: page -1};
     await update(requestQuery);
-    setCurrentPage(page);
     }
 
+    const getGameResults =  async(query: APIQuery) : Promise<Payload> => {
+        const {guildId, enemyName, filter, skip} = query;
+        let url = `${URL}/api/guild/results/${guildId}?skip=${skip}`;
+
+        if (enemyName) {
+            url += `&enemy=${enemyName}`;
+        }
+        if (filter) {
+            url += `&filter=${filter}`;
+        }
+
+        const payload = await axios.get<Payload>(url)
+            .then((response) => {
+                return response.data;
+            }
+        ).catch((error) => {
+            console.error(error);
+            return {data: [], total: 0};
+        }
+        );
+        console.log(payload);
+        setCurrentPage(skip + 1);
+        return payload;
+    }
 
 
     return (
@@ -224,12 +215,29 @@ export default function LeaderBoard() {
                                             <div className="page-indicator">
                                                 <div className="text-center page-index">
                                                     <p>Page</p>
-                                                    <input type="number" className="form-control bg-dark text-light" defaultValue={currentPage}/>
+                                                    <input type="number" className="form-control bg-dark text-light" value={currentPage}
+                                                    min={1} max={Math.ceil(gameResults.total/50)}
+                                                    onChange={
+                                                        async (event) => {
+                                                            const page = Number(event.target.value);
+                                                            await changePage(page, gameResults.total);
+                                                        }
+                                                    }/>
                                                     <p>of&nbsp;{Math.ceil(gameResults.total/50)}</p>
                                                 </div>
                                                 <ul className="pagination">
-                                                    <li className="page-item"><button className="page-link form-control bg-dark text-light" id="indicator-prev" disabled={!(currentPage > 1)}>Previous</button></li>
-                                                    <li className="page-item"><button className="page-link form-control bg-dark text-light" id="indicator-next" disabled={!(currentPage < Math.ceil(gameResults.total/50))}>Next</button></li>
+                                                    <li className="page-item"><button className="page-link form-control bg-dark text-light" id="indicator-prev" disabled={!(currentPage > 1)}
+                                                    onClick={
+                                                        async (event) => {
+                                                            await changePage(currentPage-1, gameResults.total);
+                                                        }
+                                                    }>Previous</button></li>
+                                                    <li className="page-item"><button className="page-link form-control bg-dark text-light" id="indicator-next" disabled={!(currentPage < Math.ceil(gameResults.total/50))}
+                                                    onClick={
+                                                        async (event) => {
+                                                            await changePage(currentPage+1, gameResults.total);
+                                                        }
+                                                    }>Next</button></li>
                                                 </ul>
                                             </div>
                                             <div className="dummy"></div>
