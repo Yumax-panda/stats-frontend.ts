@@ -57,8 +57,6 @@ export default function LeaderBoard() {
     const [query, setQuery] = useState<APIQuery>({guildId: "", enemyName: null, filter: "all", skip: 0});
     const [currentPage, setCurrentPage] = useState<number>(1);
 
-    // TODO: - 戦績が存在しない場合はアラートを出す
-    //       - ファイル出力のURLを表示
     const update = async (_query: APIQuery = query) => {
         const results =  await getGameResults(_query);
         const name = await getTeamName(_query.guildId);
