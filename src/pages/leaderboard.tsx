@@ -82,6 +82,8 @@ export default function LeaderBoard() {
     const [gameResults, setGameResults] = useState<GameResult[]>([]);
     const [query, setQuery] = useState<APIQuery>({guildId: "", enemyName: null, filter: "all"});
 
+    // TODO: - 戦績が存在しない場合はアラートを出す
+    //       - ファイル出力のURLを表示
     const update = async (_query: APIQuery = query) => {
         const results =  await getGameResults(_query);
         const name = await getTeamName(_query.guildId);
@@ -107,21 +109,21 @@ export default function LeaderBoard() {
                 <form className="mb-3">
                     <div className="form-row form-group row">
 
-                        <div className="col">
+                        <div className="col-4">
                             <label htmlFor="guildId">サーバーID</label>
-                            <input type="text" className="form-control bg-dark text-light" id="guildId" placeholder="サーバーID" onChange={
+                            <input type="text" className="form-control bg-dark text-light" id="guildId" onChange={
                                 async (event) => {await handleEvent(event);}
-                            }/>
+                            } autoComplete="off" />
                         </div>
 
-                        <div className="col">
+                        <div className="col-4">
                             <label htmlFor="enemyName">チーム名</label>
-                            <input type="text" className="form-control bg-dark text-light" id="enemyName" placeholder="チーム名" onChange={
+                            <input type="text" className="form-control bg-dark text-light" id="enemyName" onChange={
                                 async (event) => {await handleEvent(event);}
-                            }/>
+                            } autoComplete="off"/>
                         </div>
 
-                        <div className="col">
+                        <div className="col-4">
                             <label htmlFor="filter">フィルター</label>
                             <select className="form-control bg-dark text-light" id="filter" onChange={
                                 async (event) => {await handleEvent(event);}
@@ -136,15 +138,19 @@ export default function LeaderBoard() {
                     </div>
                 </form>
 
+                <div className="justify-content-center">
+
                 {
                     (() => {
                         if (teamName) {
                             return (
-                                <h3 className="text-center">{teamName}の戦績</h3>
+                                <h3 className="col-6 text-center">{teamName}の戦績 ({gameResults.length}件)</h3>
                             );
                         }
                     })()
                 }
+
+                </div>
 
                 <div className="text-center d-none" id="resultTable">
                     <div className="table-responsive">
