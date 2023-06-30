@@ -1,31 +1,40 @@
 import './style/common.css';
 
 import React from 'react';
+import { BrowserRouter, NavLink, Route, Switch } from 'react-router-dom';
 
 import LeaderBoard from './pages/leaderboard';
 
 function App() {
   return (
+    <BrowserRouter>
     <div className="App">
       <body className="text-light">
-        <nav className="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark border-bottom box-shadow mb-3">
-          <div className="container">
-            <h3 id="headerTitle">交流戦 Bot Webサービス</h3>
-            <div className="navbar-nav flex-grow">
-              <ul className="navbar-nav flex-grow">
-                <li className="nav-item">
-                  <a className="nav-link text-light" href="/">Home</a>
-                </li>
-                <li className="nav-item">
-                  <a className="nav-link text-light" href="/info">お知らせ</a>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </nav>
-        <LeaderBoard />
+        <header className="App-header">
+        <div className="container">
+          <nav className="navbar bg-dark mb-3">
+          <NavLink className="nav-link text-light" to="/" id="headerTitle">交流戦 Bot Webサービス</NavLink>
+            <ul className="navbar-nav flex-grow">
+              <li className="nav-item">
+                <NavLink className="nav-link" to="/about">概要</NavLink>
+              </li>
+              <li className="nav-item">
+                <NavLink className="nav-link" to="/info">お知らせ</NavLink>
+              </li>
+              <li className="nav-item">
+                <NavLink className="nav-link" to="/leaderboard">戦績一覧</NavLink>
+              </li>
+            </ul>
+            <div id="wrap"></div>
+          </nav>
+        </div>
+        </header>
+        <Switch>
+          <Route path="/leaderboard"><LeaderBoard /></Route>
+        </Switch>
       </body>
     </div>
+    </BrowserRouter>
   );
 }
 
