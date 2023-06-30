@@ -93,7 +93,7 @@ export default function LeaderBoard() {
         let url = `${URL}/api/guild/results/${guildId}?skip=${skip}`;
 
         if (enemyName) {
-            url += `&enemy=${enemyName}`;
+            url += `&name=${enemyName}`;
         }
         if (filter) {
             url += `&filter=${filter}`;
