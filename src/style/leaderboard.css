@@ -48,3 +48,69 @@ table > tbody > tr:nth-child(even) {
 input:focus, select:focus {
     outline: skyblue solid 1px;
 }
+
+.page-indicator {
+    margin-top: 15px;
+    height: 60px;
+}
+
+.pagination {
+    margin-top: 0;
+    float: right;
+}
+
+.page-item {
+    list-style: none;
+    float: left;
+}
+
+.page-item > button:hover {
+    cursor: pointer;
+}
+
+
+.page-indicator > div {
+    float: left;
+}
+
+#indicator-prev, #indicator-next {
+    border-radius: 0%;
+    border-top: #e5e5e5 1px solid;
+    border-bottom: #e5e5e5 1px solid;
+}
+
+#indicator-prev:disabled, #indicator-next:disabled {
+    color: #a8a8a8!important;
+}
+
+#indicator-prev {
+    border-left: #e5e5e5 1px solid;
+    border-right: #e5e5e5 1px solid;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+#indicator-next {
+    border-right: #e5e5e5 1px solid;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+.page-indicator > div > input {
+    width: 75px;
+    margin-right: 12px;
+    margin-left: 12px;
+}
+
+.page-index {
+    width: 60%;
+    float : left;
+    display: flex;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.page-index > p {
+    margin-top: 10px;
+    margin-left: 10px;
+}

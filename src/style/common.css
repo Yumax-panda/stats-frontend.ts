@@ -28,6 +28,10 @@ input, select {
     clear: both;
 }
 
+.dummy {
+    clear: both;
+}
+
 nav > ul {
     margin: 0;
     padding: 0;
