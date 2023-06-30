@@ -120,7 +120,8 @@ export default function LeaderBoard() {
                             <label htmlFor="enemyName">チーム名</label>
                             <input type="text" className="form-control bg-dark text-light" id="enemyName" onChange={
                                 async (event) => {await handleEvent(event);}
-                            } autoComplete="off"/>
+                            } autoComplete="off"
+                            placeholder="絞り込み"/>
                         </div>
 
                         <div className="col-4">
@@ -154,45 +155,61 @@ export default function LeaderBoard() {
 
                 <div className="text-center d-none" id="resultTable">
                     <div className="table-responsive">
-                        <table className="table table-striped table-dark table-sm">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>チーム名</th>
-                                    <th>対戦日</th>
-                                    <th>自チーム - 相手チーム</th>
-                                    <th>結果</th>
-                                </tr>
-                            </thead>
-                            <tbody id="resultTableBody">
-                                {
-                                    gameResults.map((result) => {
-                                        return (
-                                            <tr key={result.idx}>
-                                                <td className="idx">{result.idx+1}</td>
-                                                <td>{result.enemy}</td>
-                                                <td>{result.date}</td>
-                                                <td>{result.score} - {result.enemyScore}</td>
-                                                {(() => {
-                                                    if (result.diff > 0) {
+                        {
+                            (() => {
+                                if (gameResults.length > 0) {
+                                    return (
+                                        <table className="table table-striped table-dark table-sm">
+                                            <thead>
+                                                <tr>
+                                                    <th>ID</th>
+                                                    <th>チーム名</th>
+                                                    <th>対戦日</th>
+                                                    <th>自チーム - 相手チーム</th>
+                                                    <th>結果</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="resultTableBody">
+                                                {
+                                                    gameResults.map((result) => {
                                                         return (
-                                                            <td className="text-win">Win (+{result.diff})</td>
+                                                            <tr key={result.idx}>
+                                                                <td className="idx">{result.idx+1}</td>
+                                                                <td>{result.enemy}</td>
+                                                                <td>{result.date}</td>
+                                                                <td>{result.score} - {result.enemyScore}</td>
+                                                                {(() => {
+                                                                    if (result.diff > 0) {
+                                                                        return (
+                                                                            <td className="text-win">Win (+{result.diff})</td>
+                                                                        );
+                                                                    };
+                                                                    if (result.diff < 0) {
+                                                                        return (
+                                                                            <td className="text-lose">Lose ({result.diff})</td>
+                                                                        );
+                                                                    }
+                                                                    return (
+                                                                        <td className="text-draw">Draw</td>
+                                                                    );
+                                                                })()}
+                                                            </tr>
                                                         );
-                                                    };
-                                                    if (result.diff < 0) {
-                                                        return (
-                                                            <td className="text-lose">Lose ({result.diff})</td>
-                                                        );
-                                                    }
-                                                    return (
-                                                        <td className="text-draw">Draw</td>
-                                                    );
-                                                })()}
-                                            </tr>
-                                        );
-                                })}
-                            </tbody>
-                        </table>
+                                                })}
+                                            </tbody>
+                                        </table>
+                                    );
+                                } else if (gameResults.length === 0 && query.guildId !== "") {
+                                    return (
+                                        <h3 className="text-center">戦績が存在しません</h3>
+                                    );
+                                } else {
+                                    return (
+                                        <h3 className="text-center">サーバーIDを入力してください</h3>
+                                    );
+                                }
+                        })()
+                    }
                     </div>
                 </div>
 
