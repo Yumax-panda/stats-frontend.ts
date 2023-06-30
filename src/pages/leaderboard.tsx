@@ -16,12 +16,14 @@ type GameResult = {
 
 type Payload = {
     data: GameResult[];
+    total: number;
 }
 
 type APIQuery = {
     guildId: string | undefined;
     enemyName: string | null | undefined;
     filter: string | undefined;
+    skip: number;
 }
 
 type NameResponse = {
@@ -29,8 +31,8 @@ type NameResponse = {
 }
 
 
-async function getGameResults(query: APIQuery) : Promise<GameResult[]> {
-    const {guildId, enemyName, filter} = query;
+async function getGameResults(query: APIQuery) : Promise<Payload> {
+    const {guildId, enemyName, filter, skip} = query;
     let url = `${URL}/api/guild/results/${guildId}`;
     const queries = [];
 
@@ -40,21 +42,24 @@ async function getGameResults(query: APIQuery) : Promise<GameResult[]> {
     if (filter) {
         queries.push(`filter=${filter}`);
     }
+    if (skip) {
+        queries.push(`skip=${skip}`);
+    }
     if (queries.length > 0) {
         url += `?${queries.join('&')}`;
     }
 
-    const results = await axios.get<Payload>(url)
+    const payload = await axios.get<Payload>(url)
         .then((response) => {
-            return response.data.data;
+            return response.data;
         }
     ).catch((error) => {
         console.error(error);
-        return [];
+        return {data: [], total: 0};
     }
     );
-    console.log(results);
-    return results;
+    console.log(payload);
+    return payload;
 }
 
 async function getTeamName(guildId: string | undefined): Promise<string | null> {
@@ -79,8 +84,9 @@ async function getTeamName(guildId: string | undefined): Promise<string | null> 
 
 export default function LeaderBoard() {
     const [teamName, setTeamName] = useState<string | null | undefined>(null);
-    const [gameResults, setGameResults] = useState<GameResult[]>([]);
-    const [query, setQuery] = useState<APIQuery>({guildId: "", enemyName: null, filter: "all"});
+    const [gameResults, setGameResults] = useState<Payload>({data: [], total: 0});
+    const [query, setQuery] = useState<APIQuery>({guildId: "", enemyName: null, filter: "all", skip: 0});
+    const [currentPage, setCurrentPage] = useState<number>(1);
 
     // TODO: - 戦績が存在しない場合はアラートを出す
     //       - ファイル出力のURLを表示
@@ -98,6 +104,21 @@ export default function LeaderBoard() {
         await update(newQuery);
         console.log(gameResults);
         setQuery(newQuery);
+    }
+
+    const changePage = async (
+        page: number,
+        total: number,
+        _query: APIQuery = query,
+    ): Promise<void> => {
+        const maxPage = Math.ceil(total / 50);
+        if (page < 1 || page > maxPage) {
+            alert(`ページ番号は1から${maxPage}の間で指定してください`);
+            return;
+        }
+    const requestQuery = {..._query, skip: page -1};
+    await update(requestQuery);
+    setCurrentPage(page);
     }
 
 
@@ -145,7 +166,7 @@ export default function LeaderBoard() {
                     (() => {
                         if (teamName) {
                             return (
-                                <h3 className="col-6 text-center">{teamName}の戦績 ({gameResults.length}件)</h3>
+                                <h3 className="col-6 text-center">{teamName}の戦績&nbsp;({gameResults.total}件)</h3>
                             );
                         }
                     })()
@@ -157,49 +178,64 @@ export default function LeaderBoard() {
                     <div className="table-responsive">
                         {
                             (() => {
-                                if (gameResults.length > 0) {
+                                if (gameResults.data.length > 0) {
                                     return (
-                                        <table className="table table-striped table-dark table-sm">
-                                            <thead>
-                                                <tr>
-                                                    <th>ID</th>
-                                                    <th>チーム名</th>
-                                                    <th>対戦日</th>
-                                                    <th>自チーム - 相手チーム</th>
-                                                    <th>結果</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody id="resultTableBody">
-                                                {
-                                                    gameResults.map((result) => {
-                                                        return (
-                                                            <tr key={result.idx}>
-                                                                <td className="idx">{result.idx+1}</td>
-                                                                <td>{result.enemy}</td>
-                                                                <td>{result.date}</td>
-                                                                <td>{result.score} - {result.enemyScore}</td>
-                                                                {(() => {
-                                                                    if (result.diff > 0) {
+                                        <div>
+                                            <table className="table table-striped table-dark table-sm">
+                                                <thead>
+                                                    <tr>
+                                                        <th>ID</th>
+                                                        <th>チーム名</th>
+                                                        <th>対戦日</th>
+                                                        <th>自チーム - 相手チーム</th>
+                                                        <th>結果</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="resultTableBody">
+                                                    {
+                                                        gameResults.data.map((result) => {
+                                                            return (
+                                                                <tr key={result.idx}>
+                                                                    <td className="idx">{result.idx+1}</td>
+                                                                    <td>{result.enemy}</td>
+                                                                    <td>{result.date}</td>
+                                                                    <td>{result.score}&nbsp;-&nbsp;{result.enemyScore}</td>
+                                                                    {(() => {
+                                                                        if (result.diff > 0) {
+                                                                            return (
+                                                                                <td className="text-win">Win&nbsp;(+{result.diff})</td>
+                                                                            );
+                                                                        };
+                                                                        if (result.diff < 0) {
+                                                                            return (
+                                                                                <td className="text-lose">Lose&nbsp;({result.diff})</td>
+                                                                            );
+                                                                        }
                                                                         return (
-                                                                            <td className="text-win">Win (+{result.diff})</td>
+                                                                            <td className="text-draw">Draw</td>
                                                                         );
-                                                                    };
-                                                                    if (result.diff < 0) {
-                                                                        return (
-                                                                            <td className="text-lose">Lose ({result.diff})</td>
-                                                                        );
-                                                                    }
-                                                                    return (
-                                                                        <td className="text-draw">Draw</td>
-                                                                    );
-                                                                })()}
-                                                            </tr>
-                                                        );
-                                                })}
-                                            </tbody>
-                                        </table>
+                                                                    })()}
+                                                                </tr>
+                                                            );
+                                                    })}
+                                                </tbody>
+                                            </table>
+
+                                            <div className="page-indicator">
+                                                <div className="text-center page-index">
+                                                    <p>Page</p>
+                                                    <input type="number" className="form-control bg-dark text-light" defaultValue={currentPage}/>
+                                                    <p>of&nbsp;{Math.ceil(gameResults.total/50)}</p>
+                                                </div>
+                                                <ul className="pagination">
+                                                    <li className="page-item"><button className="page-link form-control bg-dark text-light" id="indicator-prev" disabled={!(currentPage > 1)}>Previous</button></li>
+                                                    <li className="page-item"><button className="page-link form-control bg-dark text-light" id="indicator-next" disabled={!(currentPage < Math.ceil(gameResults.total/50))}>Next</button></li>
+                                                </ul>
+                                            </div>
+                                            <div className="dummy"></div>
+                                        </div>
                                     );
-                                } else if (gameResults.length === 0 && query.guildId !== "") {
+                                } else if (gameResults.data.length === 0 && query.guildId !== "") {
                                     return (
                                         <h3 className="text-center">戦績が存在しません</h3>
                                     );
