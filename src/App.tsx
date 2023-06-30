@@ -13,7 +13,7 @@ function App() {
         <header className="App-header">
         <div className="container">
           <nav className="navbar bg-dark mb-3">
-          <NavLink className="nav-link text-light" to="/" id="headerTitle">交流戦 Bot Webサービス</NavLink>
+          <NavLink className="nav-link text-light" to="/" id="headerTitle">交流戦Bot&nbsp;Webサービス</NavLink>
             <ul className="navbar-nav flex-grow">
               <li className="nav-item">
                 <NavLink className="nav-link" to="/about">概要</NavLink>
@@ -25,7 +25,7 @@ function App() {
                 <NavLink className="nav-link" to="/leaderboard">戦績一覧</NavLink>
               </li>
             </ul>
-            <div id="wrap"></div>
+            <div className="dummy"></div>
           </nav>
         </div>
         </header>
