@@ -169,7 +169,7 @@ export default function LeaderBoard() {
                                     gameResults.map((result) => {
                                         return (
                                             <tr key={result.idx}>
-                                                <td>{result.idx+1}</td>
+                                                <td className="idx">{result.idx+1}</td>
                                                 <td>{result.enemy}</td>
                                                 <td>{result.date}</td>
                                                 <td>{result.score} - {result.enemyScore}</td>
