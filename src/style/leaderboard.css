@@ -1,7 +1,23 @@
 table {
-    border: grey 1px solid;
+    border: #454d55 1px solid;
     text-align: center;
     width: 100%;
+    border-spacing: 0;
+}
+
+th {
+    padding : 5px;
+    font-weight: bold;
+    border-bottom: #454d55 2px solid;
+}
+
+.idx {
+    font-weight: bold;
+    width: 10%;
+}
+
+td {
+    border-bottom: #454d55 1px solid;
 }
 
 table > thead > tr {

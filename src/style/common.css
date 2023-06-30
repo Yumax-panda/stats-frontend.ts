@@ -1,10 +1,17 @@
 body {
     background-color: #212121;
+    margin-top: 0;
     margin-bottom: 50px;
 }
 
 main {
     display: block;
+}
+
+header {
+    background-color: #343A40;
+    border-bottom: 1px solid #e5e5e5;
+    margin-bottom: 20px;
 }
 
 input, select {
@@ -17,6 +24,48 @@ input, select {
 }
 
 
+#wrap {
+    clear: both;
+}
+
+nav > ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    float: right;
+}
+
+nav > ul > li {
+    list-style: none;
+    float: left;
+}
+
+nav > ul > li > a {
+    display: block;
+    padding-right: 1rem;
+    padding-left: 1rem;
+    text-decoration: none;
+    color: #CCCECF;
+    font-size: 18px;
+    text-align: center;
+    margin-top: 10px;
+    height: 30px;
+    background-color: transparent;
+}
+
+nav > ul > li > a:hover{
+    color: white;
+}
+
+#headerTitle {
+    display: flex;
+    font-size: 20px;
+    padding-top: 10px;
+    float: left;
+    text-align: center;
+    text-decoration: none;
+}
+
 .text-light {
     color: #f8f9fa!important;
 }
@@ -27,6 +76,10 @@ input, select {
 
 .navbar {
     background-color: #343A40;
+    width: 80%;
+    margin: 0 auto 20px auto;
+    padding-left: 15px;
+    padding-right: 15px;
 }
 
 .container {
