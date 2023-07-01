@@ -10,8 +10,9 @@
 
 
 .info-container > li > img {
-    width: 95%;
-    height: 950%;
+    width: 90%;
+    max-width: 860px;
+    height: auto;
     object-fit: cover;
     border: 1px solid #343A40;
 }
