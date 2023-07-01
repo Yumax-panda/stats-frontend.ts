@@ -5,7 +5,7 @@ import { useState } from 'react';
 
 const URL = process.env.REACT_APP_API_URL;
 
-type GameResult = {
+interface GameResult {
     idx: number;
     date: string;
     enemy: string;
@@ -14,19 +14,19 @@ type GameResult = {
     diff: number;
 }
 
-type Payload = {
+interface Payload {
     data: GameResult[];
     total: number;
 }
 
-type APIQuery = {
+interface APIQuery {
     guildId: string | undefined;
     enemyName: string | null | undefined;
     filter: string | undefined;
     skip: number;
 }
 
-type NameResponse = {
+interface NameResponse {
     name: string;
 }
 
