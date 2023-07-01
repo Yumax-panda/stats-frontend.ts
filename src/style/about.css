@@ -1,9 +1,9 @@
-.container > a {
+.container > p > a {
     text-decoration: underline;
     color: #f8f9fa;
 }
 
-.container > a:hover {
+.container> p > a:hover {
     cursor: pointer;
 }
 
