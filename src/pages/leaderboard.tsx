@@ -176,7 +176,7 @@ export default function LeaderBoard() {
                                                         <th>ID</th>
                                                         <th>チーム名</th>
                                                         <th>対戦日</th>
-                                                        <th>自チーム - 相手チーム</th>
+                                                        <th>自チーム&nbsp;-&nbsp;相手チーム</th>
                                                         <th>結果</th>
                                                     </tr>
                                                 </thead>

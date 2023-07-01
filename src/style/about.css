@@ -1,0 +1,20 @@
+.container > a {
+    text-decoration: underline;
+    color: #f8f9fa;
+}
+
+.container > a:hover {
+    cursor: pointer;
+}
+
+#feature {
+    text-align: left;
+}
+
+#feature > li {
+    margin-bottom: 50px;
+}
+
+#feature > li > h2 {
+    padding-left: 10px;
+}
