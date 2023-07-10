@@ -10,6 +10,8 @@ This web app will provide some of the features of [交流戦Bot](https://discord
 - Filtering by opponent team name
 - Check for updates to the Bot and other services
 
+![Overview of this app](images/sample.jpg)
+
 ## Development
 
 ### [Frontend](https://github.com/Yumax-panda/stats-frontend.ts)
