@@ -5,6 +5,12 @@ table {
     border-spacing: 0;
 }
 
+.table-responsive {
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
+
 th {
     padding : 5px;
     font-weight: bold;
