@@ -7,6 +7,8 @@ import About from './pages/about';
 import Info from './pages/info';
 import LeaderBoard from './pages/leaderboard';
 
+// TODO: レスポンシブ対応
+
 function App() {
   return (
     <BrowserRouter>
