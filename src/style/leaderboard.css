@@ -55,28 +55,63 @@ input:focus, select:focus {
     outline: skyblue solid 1px;
 }
 
-.page-indicator {
-    margin-top: 15px;
-    height: 60px;
+.pagination {
+    display: flex;
+    padding-left: 0;
+    list-style: none;
+    border-radius: 0.25rem;
 }
 
-.pagination {
-    margin-top: 0;
-    float: right;
+.justify-content-end {
+    justify-content: flex-end!important;
 }
 
 .page-item {
     list-style: none;
     float: left;
+    box-sizing: border-box;
+}
+
+div > .form-inline {
+    float: left;
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    text-align: center!important;
+}
+
+#page-num-form {
+    display: block;
+    height: calc(1.5em + 0.75rem + 2px);
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    text-align: start;
+    width: 60px;
+}
+
+.page-item {
+    display: list-item;
+    text-align: -webkit-match-parent;
 }
 
 .page-item > button:hover {
     cursor: pointer;
 }
 
-
-.page-indicator > div {
-    float: left;
+div > ul {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0;
+    margin-inline-end: 0;
+    padding-inline-start: 40px;
 }
 
 #indicator-prev, #indicator-next {
@@ -100,23 +135,4 @@ input:focus, select:focus {
     border-right: #e5e5e5 1px solid;
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
-}
-
-.page-indicator > div > input {
-    width: 75px;
-    margin-right: 12px;
-    margin-left: 12px;
-}
-
-.page-index {
-    width: 60%;
-    float : left;
-    display: flex;
-    font-weight: bold;
-    font-size: 18px;
-}
-
-.page-index > p {
-    margin-top: 10px;
-    margin-left: 10px;
 }
