@@ -22,7 +22,16 @@ const info1: info = {
     imgAlt: 'The&nbsp;example&nbsp;use&nbsp;of&nbsp;LeaderBoard',
 }
 
+const info2: info = {
+    title: "スマホ画面に対応しました",
+    description: "スマホ画面に対応しました。スマホからでも表示が崩れずに閲覧できます。",
+    createdAt: {year: 2023, month: 7, day: 11},
+    imgURL: null,
+    imgAlt: null,
+}
+
 const infoLog: info[] = [
+    info2,
     info1,
 ];
 
