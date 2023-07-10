@@ -80,7 +80,8 @@ nav > ul > li > a:hover{
 
 .navbar {
     background-color: #343A40;
-    width: 80%;
+    width: 90%;
+    max-width: 2040px;
     margin: 0 auto 20px auto;
     padding-left: 0;
     padding-right: 0;
