@@ -18,3 +18,7 @@
 #feature > li > h2 {
     padding-left: 10px;
 }
+
+ol > li {
+    margin-right: 5%;
+}
