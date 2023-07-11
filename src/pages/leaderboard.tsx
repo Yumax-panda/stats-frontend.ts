@@ -17,6 +17,7 @@ interface GameResult {
 interface Payload {
     data: GameResult[];
     total: number;
+    name: string | null;
 }
 
 interface APIQuery {
@@ -26,41 +27,14 @@ interface APIQuery {
     skip: number;
 }
 
-interface NameResponse {
-    name: string;
-}
-
-
-async function getTeamName(guildId: string | undefined): Promise<string | null> {
-
-    if (!guildId) {
-        return null;
-    }
-
-    const url = `${URL}/api/guild/name/${guildId}`;
-
-    const name = await axios.get<NameResponse>(url)
-        .then((response) => {
-            return response.data.name;
-        }
-    ).catch((error) => {
-        console.error(error);
-        return null;
-    }
-    );
-    return name;
-}
 
 export default function LeaderBoard() {
-    const [teamName, setTeamName] = useState<string | null | undefined>(null);
-    const [gameResults, setGameResults] = useState<Payload>({data: [], total: 0});
+    const [gameResults, setGameResults] = useState<Payload>({data: [], total: 0, name: null});
     const [query, setQuery] = useState<APIQuery>({guildId: "", enemyName: null, filter: "all", skip: 0});
     const [currentPage, setCurrentPage] = useState<number>(1);
 
     const update = async (_query: APIQuery = query) => {
         const results =  await getGameResults(_query);
-        const name = await getTeamName(_query.guildId);
-        setTeamName(name);
         setGameResults(results);
     }
 
@@ -103,7 +77,7 @@ export default function LeaderBoard() {
             }
         ).catch((error) => {
             console.error(error);
-            return {data: [], total: 0};
+            return {data: [], total: 0, name: null};
         }
         );
         console.log(payload);
@@ -153,9 +127,9 @@ export default function LeaderBoard() {
 
                 {
                     (() => {
-                        if (teamName) {
+                        if (gameResults.name) {
                             return (
-                                <h3 className="col-6 text-center">{teamName}の戦績&nbsp;({gameResults.total}件)</h3>
+                                <h3 className="col-6 text-center">{gameResults.name}の戦績&nbsp;({gameResults.total}件)</h3>
                             );
                         }
                     })()
