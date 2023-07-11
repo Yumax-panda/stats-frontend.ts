@@ -9,6 +9,7 @@ This web app will provide some of the features of [交流戦Bot](https://discord
 - View team's results
 - Filtering by opponent team name
 - Check for updates to the Bot and other services
+- Simple Designs
 
 ![Overview of this app](images/sample.jpg)
 
