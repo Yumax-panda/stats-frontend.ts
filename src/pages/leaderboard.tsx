@@ -1,7 +1,8 @@
 import '../style/leaderboard.css';
 
 import axios from 'axios';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { RouteComponentProps } from 'react-router-dom';
 
 const URL = process.env.REACT_APP_API_URL;
 
@@ -27,10 +28,43 @@ interface APIQuery {
     skip: number;
 }
 
+interface LeaderBoardProps extends RouteComponentProps<{id: string | undefined}> {}
 
-export default function LeaderBoard() {
+
+export default function LeaderBoard(props: LeaderBoardProps) {
+
+    const getGameResults =  async(query: APIQuery) : Promise<Payload> => {
+        const {guildId, enemyName, filter, skip} = query;
+
+        if (!guildId) {
+            return {data: [], total: 0, name: null};
+        }
+        let url = `${URL}/api/guild/results/${guildId}?skip=${skip}`;
+
+        if (enemyName) {
+            url += `&name=${enemyName}`;
+        }
+        if (filter) {
+            url += `&filter=${filter}`;
+        }
+
+        const payload = await axios.get<Payload>(url)
+            .then((response) => {
+                return response.data;
+            }
+        ).catch((error) => {
+            console.error(error);
+            return {data: [], total: 0, name: null};
+        }
+        );
+        console.log(payload);
+        setCurrentPage(skip + 1);
+        return payload;
+    }
+
+    const initialId = props.match.params.id ? props.match.params.id : "";
     const [gameResults, setGameResults] = useState<Payload>({data: [], total: 0, name: null});
-    const [query, setQuery] = useState<APIQuery>({guildId: "", enemyName: null, filter: "all", skip: 0});
+    const [query, setQuery] = useState<APIQuery>({guildId: initialId, enemyName: null, filter: "all", skip: 0});
     const [currentPage, setCurrentPage] = useState<number>(1);
 
     const update = async (_query: APIQuery = query) => {
@@ -60,31 +94,12 @@ export default function LeaderBoard() {
     await update(requestQuery);
     }
 
-    const getGameResults =  async(query: APIQuery) : Promise<Payload> => {
-        const {guildId, enemyName, filter, skip} = query;
-        let url = `${URL}/api/guild/results/${guildId}?skip=${skip}`;
-
-        if (enemyName) {
-            url += `&name=${enemyName}`;
-        }
-        if (filter) {
-            url += `&filter=${filter}`;
-        }
-
-        const payload = await axios.get<Payload>(url)
-            .then((response) => {
-                return response.data;
-            }
-        ).catch((error) => {
-            console.error(error);
-            return {data: [], total: 0, name: null};
-        }
-        );
-        console.log(payload);
-        setCurrentPage(skip + 1);
-        return payload;
-    }
-
+    // Only called when the component is mounted for the first time
+    useEffect(() => {
+        (async () => {
+            await update({guildId: initialId, enemyName: null, filter: "all", skip: 0});
+        })();
+    }, []);
 
     return (
         <div className="container">

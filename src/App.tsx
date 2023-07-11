@@ -36,7 +36,8 @@ function App() {
         <Switch>
           <Route path="/info"><Info /></Route>
           <Route path="/about"><About /></Route>
-          <Route path="/"><LeaderBoard /></Route>
+          <Route path="/:id" component={LeaderBoard}/>
+          <Route path="/" component={LeaderBoard}/>
         </Switch>
       </body>
     </div>
