@@ -8,7 +8,9 @@ const botURL = "https://discord.com/oauth2/authorize?client_id=10383229851462738
 export default function About() {
     return (
         <div className="container">
+            <div>
             <p>本サイトは、Discord上で動く<a href={botURL}>交流戦Bot</a>のサービスの一部を提供しています。</p>
+            </div>
 
             <ol type="I" className="feature" id="feature">
                 <li>
